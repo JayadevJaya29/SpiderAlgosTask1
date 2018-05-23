@@ -51,9 +51,8 @@ int main()
 	vector <string> v;
 	int n,k,i=0;
 	string x;
-	cout<<"\nenter number of test cases (n) and key(k) for all test cases\n";
+	cout<<"\nenter number of test cases (n) and key(k) for all test cases in first line \nthen enter n cases to be encrypted first and then enter n cases to be decrypted in the following lines \n";
 	cin>>n>>k;
-	cout<<"\nenter "<<n<<" cases to be encrypted first and then enter "<<n<<" cases to be decrypted \n";
 	while(i<2*n)
 	{
 		cin>>x;
@@ -62,11 +61,11 @@ int main()
 	}
 	for(i=0;i<n;++i)
 	{
-		cout<<"\nCipherText#"<<i+1<<": "<<encrypt(v[i],k);
+		cout<<"\nciphertext#"<<i+1<<":"<<encrypt(v[i],k);
 	}
 	for(i=n;i<2*n;++i)
 	{
-		cout<<"\nPlainText#"<<i-n+1<<":  "<<decrypt(v[i],k);
+		cout<<"\nplaintext#"<<i-n+1<<":"<<decrypt(v[i],k);
 	}
     return 0;
 }

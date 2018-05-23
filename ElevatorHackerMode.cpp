@@ -75,21 +75,17 @@ int main()
 	int i,j,k,n,x,y,z,cmax,c,l,e;
 	cout<<"Enter the floor to start from \t";
 	cin>>k;
-	cout<<"\nEnter max lift capacity \t";
+	cout<<"\nEnter maximum lift capacity (if you want to schedule without considering maximum lift capacity, enter 0) \t";
 	cin>>cmax;
-	cout<<"\nEnter floor number,number of people entering at floor,number of people leaving at floor in order (Include the starting floor). Enter 3 0s to stop accepting input. Note that total people entering lift should be = total people leaving lift.\n";
+	cout<<"\nEnter floor number,number of people entering at floor,number of people leaving at floor in order (Include the starting floor). Enter 3 0s to stop accepting input. Note that total people entering lift should be equal to total people leaving lift.\n\n";
 	while(cin>>x>>y>>z)
 	{
 		if(x==0)
 		break;
-		if(y>cmax||z>cmax)
-		{
-			cout<<"Error! People entering or exiting cannot be more than max capacity "<<k;
-			continue;
-		}
 		v.push_back(input(x,y,z));
 	}
 	sort(v.begin(),v.end(),compare);
+	checkcount(v);  //Assuming after completion, nobody stays in lift. i.e. people entering=people leaving.
 	for(i=0;i<v.size();++i)
 	{
 		v1.push_back(v[i]); //duplicate the vector
@@ -100,33 +96,30 @@ int main()
 	int pos=binarysearch(v,beg,end,k);
 	if(pos==-1)
     exit(1);
- 	cout<<"\n\nPossibility 1 (Upwards First) (Ignoring Lift Capacity)\n";
- 	for(int i=pos;i<n;++i)
-	{
-		cout<<"\n";
-		cout<<v[i].fno<<" "<<v[i].ent<<" "<<v[i].ex;
-	}
-	for(int i=pos-1;i>=0;--i)
-	{
-		cout<<"\n";
-		cout<<v[i].fno<<" "<<v[i].ent<<" "<<v[i].ex;
-	}
-	cout<<"\n\nPossibility 2 (Downwards First) (Ignoring Lift Capacity) \n";
-		for(int i=pos;i>=0;--i)
-	{
-		cout<<"\n";
-		cout<<v[i].fno<<" "<<v[i].ent<<" "<<v[i].ex;
-	}
-	for(int i=pos+1;i<n;++i)
-	{
-		cout<<"\n";
-		cout<<v[i].fno<<" "<<v[i].ent<<" "<<v[i].ex;
-	}
 	c=0;
-	checkcount(v);  //Assuming after completion, nobody stays in lift. i.e. people entering=people leaving.
-	cout<<"\n\nPossibility 1 (Upwards first) (Considering Lift Capacity) \n\n";
+	if(cmax==0)
+	{
+		for(i=0;i<n;++i)
+		cmax=cmax+v[i].ent;
+		++cmax;
+	}//if you make cmax more than all people entering lift, then v[i].ent+c is always> cmax, so all v[i].ent people can enter at a floor the first time it is visited and it effectively reduces to the case where max lift capacity is ignored.
+	
+	if(v[0].fno==k)
+	{
+		cout<<"\n\nOnly Possibility (Upwards first) \n\n";
+	}
+	if(k==v[n-1].fno)
+	{
+		cout<<"\n\nOnly Possibility (Downwards first) \n\n";
+	}
+	if(k!=v[0].fno&&k!=v[n-1].fno)
+	{
+		cout<<"\n\nPossibility 1 (Upwards first) \n\n";
+	}
 	while(check(v)) //Assuming People inside leave first and then people get in.
 	{
+		if(k==v[n-1].fno)
+		break;
 		for(i=pos;i<n-1;++i)
 		{
 			if(v[i].ent!=0 || v[i].ex!=0)
@@ -230,10 +223,15 @@ int main()
 			}
 		}
 	}
-	cout<<"\n\nPossibility 2 (Downwards first) (Considering Lift Capacity) \n\n";	
+	if(k!=v[0].fno&&k!=v[n-1].fno)
+	{
+		cout<<"\n\nPossibility 2 (Downwards first) \n\n";		
+	}
 	c=0;
 	while(check(v1))
 	{
+		if(k==v[0].fno)
+		break;
 		for(i=pos;i>0;--i)
 		{
 			if(v1[i].ent!=0 || v1[i].ex!=0)
